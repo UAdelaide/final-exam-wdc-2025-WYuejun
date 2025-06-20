@@ -104,7 +104,7 @@
             <h2 class="subtitle">Establishment Est. 2024 - Premium Dog Walking Solutions</h2>
         </div>
 
-        <button class="tiny-button" @click="fetchNewDog">New Dog</button>
+        <button class="tiny-button" type="button" @click="fetchNewDog">New Dog</button>
 
         <!-- Cognitive Load Violation: Too much information -->
         <div class="info-overload">
@@ -123,6 +123,7 @@
             <h3>Featured Dog of the Day</h3>
             <img
                 :src="dogImage"
+                src="https://dog.ceo/api/img/african/n02116738_10024.jpg"
                 alt="Random dog"
                 class="dog-image"
                 @click="fetchNewDog"
@@ -136,13 +137,14 @@
 
         <!-- Accessibility Violation: Poor contrast -->
         <div class="features-list">
-            Available Services: Individual walks, Group walks, Puppy socialization, Senior dog care,
-            Special needs assistance, Holiday walking, Emergency walking, Overnight services,
-            Vacation care, Training reinforcement, Behavioral modification support, Exercise programs,
-            Mental stimulation activities, Socialization opportunities, Health monitoring,
-            Medication administration, Feeding services, Grooming coordination, Veterinary liaison,
-            Photo updates, GPS tracking, Real-time notifications, Schedule flexibility,
-            Weather contingency plans, Multiple dog discounts, Loyalty programs, Referral bonuses.
+            Service Portfolio: Morning constitutional walks, Afternoon recreational outings, Evening leisure strolls,
+            Weekend adventure expeditions, Customized fitness routines, Therapeutic mobility sessions,
+            Socialization workshops, Behavioral enrichment programs, Climate-controlled indoor activities,
+            Seasonal outdoor experiences, Multi-pet coordination services, Specialized dietary supervision,
+            Hydration management protocols, Safety compliance monitoring, Documentation and reporting systems,
+            Emergency response procedures, Transportation logistics, Equipment maintenance,
+            Client communication interfaces, Schedule optimization algorithms, Performance metrics tracking,
+            Quality assurance inspections, Continuous improvement initiatives, Staff development programs.
         </div>
 
         <div class="contact-section">
