@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Walker Finder Pro Max Ultra</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        body {
+            background: #ff6b35;
+            font-family: 'Times New Roman', serif;
+            margin: 0;
+            padding: 40px;
+            color: #2d5016;
+        }
+
+        /* Cognitive Load Violation: Information overload */
+        .header-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .main-title {
+            font-size: 48px;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            margin: 20px 0;
+            text-decoration: underline;
+        }
+
+        .subtitle {
+            font-size: 24px;
+            font-style: italic;
+            margin: 10px 0;
+        }
+
+        .info-overload {
+            font-size: 14px;
+            text-align: justify;
+            line-height: 2.5;
+            margin: 20px 0;
+            background: #fff3cd;
+            padding: 25px;
+            border: 5px dashed #856404;
+        }
+
+        /* Kinematic Load Violation: Hard to reach targets */
+        .dog-display {
+            text-align: center;
+            margin: 50px 0;
+        }
+
+        .dog-image {
+            width: 280px;
+            height: 280px;
+            border: 8px solid #dc3545;
+            margin: 0 auto;
+            display: block;
+            cursor: pointer;
+        }
+
+        .tiny-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 3px 6px;
+            font-size: 8px;
+            cursor: pointer;
+            margin: 2px;
+            position: absolute;
+            right: 15px;
+            top: 15px;
+        }
+
+        /* Accessibility Violation: Poor contrast and readability */
+        .features-list {
+            background: #f8f9fa;
+            color: #e9ecef;
+            padding: 30px;
+            margin: 25px 0;
+            font-size: 11px;
+            line-height: 1.2;
+        }
+
+        .dog-info {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .contact-section {
+            margin-top: 40px;
+            text-align: center;
+            background: #6f42c1;
+            color: #ffc107;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="header-section">
+            <h1 class="main-title">Professional Canine Ambulatory Services</h1>
+            <h2 class="subtitle">Establishment Est. 2024 - Premium Dog Walking Solutions</h2>
+        </div>
+
+        <button class="tiny-button" @click="fetchNewDog">New Dog</button>
+
+        <!-- Cognitive Load Violation: Too much information -->
+        <div class="info-overload">
+            Our comprehensive dog walking service provides unparalleled care for your beloved canine companions.
+            We offer multiple service tiers including: Basic Walking (30 minutes), Extended Walking (60 minutes),
+            Premium Adventure Walking (90 minutes), and Ultra Luxury Walking Experience (120 minutes).
+            All services include pre-walk consultation, during-walk monitoring, post-walk report,
+            photographic documentation, behavioral assessment, and detailed activity summary.
+            Our certified professional dog walking specialists undergo rigorous training programs including
+            canine behavior psychology, emergency first aid certification, weather adaptation protocols,
+            and customer service excellence training. We maintain comprehensive insurance coverage,
+            bonding protection, and guarantee 100% satisfaction or full refund policy.
+        </div>
+
+        <div class="dog-display">
+            <h3>Featured Dog of the Day</h3>
+            <img
+                :src="dogImage"
+                alt="Random dog"
+                class="dog-image"
+                @click="fetchNewDog"
+            />
+            <div class="dog-info">
+                Click the dog image to see another random dog!
+                <br>
+                Current dog breed: {{ currentBreed }}
+            </div>
+        </div>
+
+        <!-- Accessibility Violation: Poor contrast -->
+        <div class="features-list">
+            Available Services: Individual walks, Group walks, Puppy socialization, Senior dog care,
+            Special needs assistance, Holiday walking, Emergency walking, Overnight services,
+            Vacation care, Training reinforcement, Behavioral modification support, Exercise programs,
+            Mental stimulation activities, Socialization opportunities, Health monitoring,
+            Medication administration, Feeding services, Grooming coordination, Veterinary liaison,
+            Photo updates, GPS tracking, Real-time notifications, Schedule flexibility,
+            Weather contingency plans, Multiple dog discounts, Loyalty programs, Referral bonuses.
+        </div>
+
+        <div class="contact-section">
+            <h3>Get In Touch With Our Team</h3>
+            <p>Phone: 1-800-WALK-NOW</p>
+            <p>Email: contact@caninewalkers.net</p>
+            <p>Business Hours: Always Open - Round the Clock Service</p>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    dogImage: '',
+                    currentBreed: 'Loading...'
+                }
+            },
+            async mounted() {
+                await this.fetchNewDog();
+            },
+            methods: {
+                async fetchNewDog() {
+                    try {
+                        const response = await fetch('https://dog.ceo/api/breeds/image/random');
+                        const data = await response.json();
+                        this.dogImage = data.message;
+
+                        // Extract breed from URL
+                        const urlParts = data.message.split('/');
+                        const breedIndex = urlParts.findIndex(part => part === 'breeds') + 1;
+                        this.currentBreed = breedIndex < urlParts.length ?
+                            urlParts[breedIndex].charAt(0).toUpperCase() + urlParts[breedIndex].slice(1) :
+                            'Unknown';
+                    } catch (error) {
+                        console.error('Error fetching dog image:', error);
+                        this.currentBreed = 'Error loading';
+                    }
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
