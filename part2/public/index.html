@@ -13,8 +13,71 @@
     <h1 class="mb-4 text-primary">{{ message }}</h1>
     <p class="lead">Connect with trusted walkers for your beloved dog!</p>
 
-    <a href="owner-dashboard.html" class="btn btn-outline-primary me-2">Owner Dashboard</a>
-    <a href="walker-dashboard.html" class="btn btn-outline-success">Walker Dashboard</a>
+    <!-- Login Form -->
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h3 class="card-title text-center mb-4">Login</h3>
+
+            <form @submit.prevent="login">
+              <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="username"
+                  v-model="loginForm.username"
+                  required
+                  placeholder="Enter your username"
+                >
+              </div>
+
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password"
+                  v-model="loginForm.password"
+                  required
+                  placeholder="Enter your password"
+                >
+              </div>
+
+              <div v-if="errorMessage" class="alert alert-danger" role="alert">
+                {{ errorMessage }}
+              </div>
+
+              <div v-if="successMessage" class="alert alert-success" role="alert">
+                {{ successMessage }}
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100" :disabled="isLoading">
+                <span v-if="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                {{ isLoading ? 'Logging in...' : 'Log In' }}
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Test credentials info -->
+        <div class="mt-3">
+          <small class="text-muted">
+            <strong>Test Credentials:</strong><br>
+            Owner: ownerJane / hashedpassword123<br>
+            Walker: walkerMike / hashedpassword456
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Original Dashboard Buttons (for testing) -->
+    <div class="mt-4 text-center">
+      <p class="text-muted">Or access directly:</p>
+      <a href="owner-dashboard.html" class="btn btn-outline-primary me-2">Owner Dashboard</a>
+      <a href="walker-dashboard.html" class="btn btn-outline-success">Walker Dashboard</a>
+    </div>
   </div>
 
   <script>
@@ -22,8 +85,51 @@
     createApp({
       data() {
         return {
-          message: 'Welcome to the Dog Walking Service!'
+          message: 'Welcome to the Dog Walking Service!',
+          loginForm: {
+            username: '',
+            password: ''
+          },
+          errorMessage: '',
+          successMessage: '',
+          isLoading: false
         };
+      },
+      methods: {
+        async login() {
+          this.isLoading = true;
+          this.errorMessage = '';
+          this.successMessage = '';
+
+          try {
+            const response = await fetch('/api/users/login', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                username: this.loginForm.username,
+                password: this.loginForm.password
+              })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              this.successMessage = 'Login successful! Redirecting...';
+              // Redirect based on user role
+              setTimeout(() => {
+                window.location.href = data.redirectUrl;
+              }, 1000);
+            } else {
+              this.errorMessage = data.error || 'Login failed';
+            }
+          } catch (error) {
+            this.errorMessage = 'Network error. Please try again.';
+          } finally {
+            this.isLoading = false;
+          }
+        }
       }
     }).mount('#app');
   </script>
