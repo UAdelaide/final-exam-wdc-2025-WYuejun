@@ -24,9 +24,15 @@
       </div>
       <div class="card-body">
         <form @submit.prevent="submitWalkRequest">
+          <!-- MODIFIED: Dog selection dropdown instead of numeric input -->
           <div class="mb-3">
-            <label class="form-label">Dog ID</label>
-            <input v-model="form.dog_id" type="number" class="form-control" required>
+            <label class="form-label">Select Your Dog</label>
+            <select v-model="form.dog_id" class="form-select" required>
+              <option value="">-- Choose a dog --</option>
+              <option v-for="dog in userDogs" :key="dog.dog_id" :value="dog.dog_id">
+                {{ dog.name }} ({{ dog.size }})
+              </option>
+            </select>
           </div>
           <div class="mb-3">
             <label class="form-label">Requested Date & Time</label>
@@ -83,6 +89,7 @@
         });
 
         const walks = ref([]);
+        const userDogs = ref([]);  // ADDED: Store current user's dogs
         const message = ref('');
         const error = ref('');
 
@@ -92,6 +99,20 @@
             walks.value = await res.json();
           } catch (err) {
             error.value = 'Failed to load walk requests';
+          }
+        }
+
+        // ADDED: Function to load current user's dogs
+        async function loadUserDogs() {
+          try {
+            const res = await fetch('/api/users/dogs');
+            if (res.ok) {
+              userDogs.value = await res.json();
+            } else {
+              error.value = 'Failed to load your dogs';
+            }
+          } catch (err) {
+            error.value = 'Failed to load dogs list';
           }
         }
 
@@ -141,17 +162,20 @@
           }
         }
 
+        // MODIFIED: Load both walks and user dogs on mount
         onMounted(() => {
           loadWalks();
+          loadUserDogs();  // ADDED: Load user's dogs
         });
 
         return {
           form,
           walks,
+          userDogs,        // ADDED: Include userDogs in return
           message,
           error,
           submitWalkRequest,
-          logout  // Added logout function
+          logout
         };
       }
     }).mount('#app');
