@@ -36,6 +36,26 @@ router.get('/me', (req, res) => {
   res.json(req.session.user);
 });
 
+// GET current user's dogs - NEW ROUTE ADDED
+router.get('/dogs', async (req, res) => {
+  // Check if user is logged in
+  if (!req.session.user) {
+    return res.status(401).json({ error: 'Not logged in' });
+  }
+
+  try {
+    // Get dogs owned by current logged-in user
+    const [rows] = await db.query(`
+      SELECT dog_id, name, size FROM Dogs
+      WHERE owner_id = ?
+    `, [req.session.user.user_id]);
+
+    res.json(rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch user dogs' });
+  }
+});
+
 // POST login with session storage
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
